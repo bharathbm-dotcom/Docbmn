@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BMN</title>
+
+  <!-- YAML parser -->
+  <script src="js/js-yaml.min.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .item {
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="title">Loading...</h1>
+  <div id="list"></div>
+
+  <script>
+    fetch('data.yaml')
+      .then(response => response.text())
+      .then(text => {
+        const data = jsyaml.load(text);
+
+        // Map YAML data to HTML
+        document.getElementById('title').textContent = data.title;
+
+        const list = document.getElementById('list');
+        list.innerHTML = '';
+
+        data.items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.textContent = `${item.name} - ${item.status}`;
+          list.appendChild(div);
+        });
+      })
+      .catch(error => {
+        document.getElementById('title').textContent = 'Failed to load YAML';
+        console.error(error);
+      });
+  </script>
+
+</body>
+</html>
